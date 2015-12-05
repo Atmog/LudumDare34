@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Audio>
+	<Global value="100" />
+	<Music value="100" />
+	<Sound value="100" />
+</Audio>
+<Window>
+	<VerticalSync value="true" />
+	<Fullscreen value="false" />
+	<Resolution value="800,600" />
+</Window>
