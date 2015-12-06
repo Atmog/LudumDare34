@@ -6,41 +6,39 @@ MenuState::MenuState(ah::StateManager& manager)
     sf::Vector2u wSize = ah::Application::getWindow().getSize();
     sf::Vector2f scale = sf::Vector2f(wSize.x/800.f,wSize.y/600.f);
 
+    sf::Vector2f bSize = sf::Vector2f(400 * scale.x, 75 * scale.y);
+
     auto buttonGame = sfg::Button::Create("Play");
+	buttonGame->SetClass("menu_button");
+	buttonGame->SetAllocation(sf::FloatRect(wSize.x / 2 - bSize.x * 0.5f, 200.f * scale.y, bSize.x, bSize.y));
 	buttonGame->GetSignal(sfg::Widget::OnLeftClick).Connect([&]()
     {
         ah::Application::getAudio().playSound("jingle");
     });
-	buttonGame->SetAllocation(sf::FloatRect(wSize.x / 2 - 200, 200.f, 400, 75));
-	buttonGame->SetClass("menu_button");
 
 	auto buttonSettings = sfg::Button::Create("Settings");
+	buttonSettings->SetClass("menu_button");
+	buttonSettings->SetAllocation(sf::FloatRect(wSize.x / 2 - bSize.x * 0.5f, 325.f * scale.y, bSize.x, bSize.y));
 	buttonSettings->GetSignal(sfg::Widget::OnLeftClick).Connect([&]()
     {
-        ah::Application::getAudio().playSound("jingle");
+        requestClear();
+        requestPush(lp::type<SettingsState>());
     });
-	buttonSettings->SetAllocation(sf::FloatRect(wSize.x / 2 - 200, 325.f, 400, 75));
-	buttonSettings->SetClass("menu_button");
 
 	auto buttonQuit = sfg::Button::Create("Quit");
+	buttonQuit->SetClass("menu_button");
+	buttonQuit->SetAllocation(sf::FloatRect(wSize.x / 2 - bSize.x * 0.5f, 450.f * scale.y, bSize.x, bSize.y));
 	buttonQuit->GetSignal(sfg::Widget::OnLeftClick).Connect([&]()
     {
         ah::Application::getWindow().close();
     });
-	buttonQuit->SetAllocation(sf::FloatRect(wSize.x / 2 - 200, 450.f, 400, 75));
-	buttonQuit->SetClass("menu_button");
 
-	sfg::Context::Get().GetEngine().SetProperties(
-		"Button.menu-button"
-		"{"
-		"	FontSize: " + std::to_string(static_cast<unsigned int>(25 * scale.y)) + ";"
-		"}"
-	);
+	mDesktop.LoadThemeFromFile("Assets/Data/theme.css");
+    mDesktop.SetProperty("Button.menu_button","FontSize",std::to_string(static_cast<unsigned int>(25 * scale.y)));
 
 	mDesktop.Add(buttonGame);
 	mDesktop.Add(buttonSettings);
 	mDesktop.Add(buttonQuit);
-	mDesktop.LoadThemeFromFile("Assets/Data/theme.css");
 
 	mBackground.setScale(scale);
 	mBackground.setTexture(ah::Application::getResources().getTexture("bg"));
@@ -48,7 +46,7 @@ MenuState::MenuState(ah::StateManager& manager)
 	mTitleText.setFont(ah::Application::getResources().getFont("atmog"));
     mTitleText.setString(Game::getTitle());
     mTitleText.setCharacterSize(static_cast<unsigned int>(80 * scale.y));
-    mTitleText.setPosition(wSize.x * 0.5f - mTitleText.getGlobalBounds().width * 0.5f, 25.f);
+    mTitleText.setPosition(wSize.x * 0.5f - mTitleText.getGlobalBounds().width * 0.5f, 25.f * scale.y);
     mTitleText.setColor(sf::Color::White);
 
     mTitleShadow.setFont(ah::Application::getResources().getFont("atmog"));
@@ -85,7 +83,6 @@ void MenuState::render(sf::RenderTarget& target, sf::RenderStates states)
 
 void MenuState::onActivate()
 {
-    ah::Application::getWindow().useCustomMouseCursor(&ah::Application::getResources().getTexture("cursor"));
 }
 
 void MenuState::onDeactivate()

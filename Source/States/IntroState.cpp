@@ -70,4 +70,5 @@ void IntroState::onActivate()
 
 void IntroState::onDeactivate()
 {
+    ah::Application::getWindow().useCustomMouseCursor(&ah::Application::getResources().getTexture("cursor"));
 }

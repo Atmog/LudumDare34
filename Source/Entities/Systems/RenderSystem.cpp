@@ -28,9 +28,10 @@ void RenderSystem::render(sf::RenderTarget& target)
     sf::View old = target.getView();
 
     sf::FloatRect viewRect;
+    // Update view from camera and set viewRect from it
     target.setView(updateView(viewRect,target.getDefaultView()));
 
-    ses::EntityVector e = getDrawables();
+    ses::EntityVector e = getDrawables(); // Get and sort Drawables
     for (std::size_t i = 0; i < e.size(); i++)
     {
         sf::RenderStates states;

@@ -10,6 +10,8 @@
 #include "../System.hpp"
 #include "../Components.hpp"
 
+#include "../../Application/Application.hpp"
+
 namespace ses
 {
 
@@ -19,23 +21,15 @@ class AudioSystem : public System
         AudioSystem();
         virtual ~AudioSystem();
 
-        bool loadSound(std::string const& filename, std::string const& id = "");
-        //bool loadMusic(std::string const& filename, std::string const& id = "");
-
-        void playSound(std::string const& id, Id const& eId);
-        //void playMusic(std::string const& id, Id const& eId, bool loop = true);
-        //void stopMusic(std::string const& id, Id const& eId);
+        void playSound(std::string const& id);
+        void playSound(std::string const& id, Id const& eId, bool dynamic = false);
 
         void update();
 
+        typedef std::pair<std::size_t,Id> Source;
+
     protected:
-        ComponentFilter mFilter;
-
-        std::map<std::string,sf::SoundBuffer> mSoundBuffers;
-        //std::map<std::string,std::string> mMusicIds;
-
-        std::map<std::string,std::vector<sf::Sound>> mSounds;
-        //std::map<std::string,std::map<std::string,sf::Music>> mMusics;
+        std::vector<Source> mSources;
 };
 
 } // namespace ses

@@ -9,12 +9,12 @@ Window::Window()
     mVerticalSync = false;
     mVisible = false;
     mKeyRepeat = true;
-    mFullscreen = false;
     mCursor = MouseCursor::Default;
     mScreenshotPath = "";
     mDebugInfoVisible = false;
     mDebugInfoColor = sf::Color::White;
     mDebugInfoCharsize = 15;
+    mStyle = sf::Style::Close;
 
     if (!load())
     {
@@ -54,28 +54,21 @@ void Window::display()
     sf::RenderWindow::display();
 }
 
-void Window::create(std::string const& title, sf::Uint32 style)
+void Window::create()
 {
-    if (mFullscreen)
+    if (isFullscreen() && !mVideoMode.isValid())
     {
-        create(mVideoMode,title,sf::Style::Fullscreen);
+        mVideoMode = sf::VideoMode::getFullscreenModes()[0];
     }
-    else
-    {
-        create(mVideoMode,title,style);
-    }
+    sf::RenderWindow::create(mVideoMode,mTitle,mStyle);
 }
 
 void Window::create(sf::VideoMode videoMode, std::string const& title, sf::Uint32 style)
 {
-    mTitle = title;
-    mFullscreen = (style & sf::Style::Fullscreen);
-    if (mFullscreen && !videoMode.isValid()) // Error : Invalid mode
-    {
-        videoMode = sf::VideoMode::getFullscreenModes()[0];
-    }
     mVideoMode = videoMode;
-    sf::RenderWindow::create(videoMode,title,style);
+    mTitle = title;
+    mStyle = style;
+    create();
 }
 
 void Window::close()
@@ -84,10 +77,52 @@ void Window::close()
     mVisible = false;
 }
 
+bool Window::isFullscreen() const
+{
+    return (mStyle & sf::Style::Fullscreen);
+}
+
+void Window::setFullscreen(bool full, sf::Uint32 style)
+{
+    mStyle = (full) ? sf::Style::Fullscreen : style;
+    if (isOpen())
+    {
+        create();
+    }
+}
+
+sf::VideoMode Window::getVideoMode() const
+{
+    return mVideoMode;
+}
+
+void Window::setVideoMode(sf::VideoMode const& videoMode)
+{
+    mVideoMode = videoMode;
+    if (isOpen())
+    {
+        create();
+    }
+}
+
+sf::Uint32 Window::getStyle() const
+{
+    return mStyle;
+}
+
+void Window::setStyle(sf::Uint32 style)
+{
+    mStyle = style;
+    if (isOpen())
+    {
+        create();
+    }
+}
+
 void Window::setTitle(std::string const& title)
 {
-    sf::RenderWindow::setTitle(title);
     mTitle = title;
+    sf::RenderWindow::setTitle(title);
 }
 
 std::string Window::getTitle() const
@@ -372,8 +407,8 @@ bool Window::load()
     pugi::xml_node window = doc.child("Window");
     if (window)
     {
-        mVerticalSync = window.child("VerticalSync").attribute("value").as_bool();
-        mFullscreen = window.child("Fullscreen").attribute("value").as_bool();
+        setVerticalSyncEnabled(window.child("VerticalSync").attribute("value").as_bool());
+        setFullscreen(window.child("Fullscreen").attribute("value").as_bool(),sf::Style::Close);
         std::string v = window.child("Resolution").attribute("value").value();
         mVideoMode.width = static_cast<unsigned int>(std::stoi(v.substr(0,v.find(","))));
         mVideoMode.height = static_cast<unsigned int>(std::stoi(v.substr(v.find(",")+1)));
@@ -384,10 +419,17 @@ bool Window::load()
 
 void Window::detect()
 {
-    mVerticalSync = false; // Might be changed
-    mFullscreen = false; // Might be changed
-    // Choose the "best" resolution
-    mVideoMode = sf::VideoMode(800,600); // Need to be changed
+    mVerticalSync = true;
+    if (sf::VideoMode::getFullscreenModes().size() > 0)
+    {
+        mStyle = sf::Style::Fullscreen;
+        mVideoMode = sf::VideoMode::getFullscreenModes()[0];
+    }
+    else
+    {
+        mStyle = sf::Style::Close;
+        mVideoMode = sf::VideoMode(800,600);
+    }
 }
 
 void Window::save()
@@ -400,7 +442,7 @@ void Window::save()
     }
     pugi::xml_node window = doc.append_child("Window");
     window.append_child("VerticalSync").append_attribute("value") = mVerticalSync;
-    window.append_child("Fullscreen").append_attribute("value") = mFullscreen;
+    window.append_child("Fullscreen").append_attribute("value") = isFullscreen();
     window.append_child("Resolution").append_attribute("value") = std::string(std::to_string(mVideoMode.width) + "," + std::to_string(mVideoMode.height)).c_str();
     doc.save_file("Assets/Data/settings.xml");
 }

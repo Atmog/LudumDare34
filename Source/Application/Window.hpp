@@ -29,9 +29,16 @@ class Window : public sf::RenderWindow
         //
         // SETTINGS
         //
-        void create(std::string const& title, sf::Uint32 style = sf::Style::Default);
-        void create(sf::VideoMode videoMode, std::string const& title, sf::Uint32 style = sf::Style::Default);
+        void create();
+        void create(sf::VideoMode videoMode, std::string const& title, sf::Uint32 style = sf::Style::Close);
         void close();
+        bool isFullscreen() const;
+        void setFullscreen(bool full, sf::Uint32 style = sf::Style::Close);
+        sf::VideoMode getVideoMode() const;
+        void setVideoMode(sf::VideoMode const& videoMode);
+        sf::Uint32 getStyle() const;
+        void setStyle(sf::Uint32 style);
+
 
         void setTitle(std::string const& title);
         std::string getTitle() const;
@@ -118,8 +125,8 @@ class Window : public sf::RenderWindow
         bool mVerticalSync;
         bool mVisible;
         bool mKeyRepeat;
-        bool mFullscreen;
         sf::VideoMode mVideoMode;
+        sf::Uint32 mStyle;
 
         sf::Image mIcon;
 
