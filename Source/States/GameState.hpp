@@ -6,8 +6,9 @@
 #include "States.hpp"
 
 #include <SFML/Graphics/Sprite.hpp> // temp test
-#include "../Map/Map.hpp" // temp test
-#include "../Map/Test/TileLayer.hpp" // temp tests
+#include "../Entities/Systems.hpp"
+#include "../Entities/Components.hpp"
+#include "../Entities/World.hpp"
 
 class GameState : public ah::State
 {
@@ -23,8 +24,7 @@ class GameState : public ah::State
         void onDeactivate();
 
     protected:
-        sf::Sprite mSprite;
-        map::Map mMap;
+        ses::World mWorld;
 };
 
 #endif // GAMESTATE_HPP

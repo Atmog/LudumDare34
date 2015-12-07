@@ -1,7 +1,7 @@
 #ifndef SES_ID_HPP
 #define SES_ID_HPP
 
-#include "Utility.hpp"
+#include <string>
 
 namespace ses
 {

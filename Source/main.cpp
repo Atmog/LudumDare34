@@ -7,8 +7,6 @@ INITIALIZE_EASYLOGGINGPP
 
 int main()
 {
-    LOG(INFO) << app::getOSName();
-
     ah::Application::getResources().loadImage("icon","Assets/Textures/icon.png");
 
     ah::Application::getResources().loadTexture("icon","Assets/Textures/icon.png");
@@ -37,10 +35,11 @@ int main()
     ah::Application::getStates().registerState<GameState>();
     ah::Application::getStates().registerState<SettingsState>();
 
-    ah::Application::getStates().pushState<SettingsState>();
+    ah::Application::getStates().pushState<GameState>();
 
     ah::Application::getAudio().playMusic("Assets/Musics/theme.ogg");
 
     ah::Application::run();
+
     return 0;
 }

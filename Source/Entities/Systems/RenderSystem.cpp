@@ -6,11 +6,11 @@ namespace ses
 
 RenderSystem::RenderSystem()
 {
-    mFilterCamera.requires(type<CameraComponent>());
+    mFilterCamera.requires(lp::type<CameraComponent>());
 
     std::vector<std::string> drawableTypes;
-    drawableTypes.push_back(type<SpriteComponent>());
-    drawableTypes.push_back(type<TileLayerComponent>());
+    drawableTypes.push_back(lp::type<SpriteComponent>());
+    drawableTypes.push_back(lp::type<TileLayerComponent>());
     mFilterDrawables.requiresOne(drawableTypes);
 }
 
@@ -35,7 +35,7 @@ void RenderSystem::render(sf::RenderTarget& target)
     for (std::size_t i = 0; i < e.size(); i++)
     {
         sf::RenderStates states;
-        states.transform = e[i]->getTransform();
+        states.transform *= e[i]->getTransform();
         handleDrawable<SpriteComponent>(target,states,e[i],viewRect);
         handleDrawable<TileLayerComponent>(target,states,e[i],viewRect);
     }

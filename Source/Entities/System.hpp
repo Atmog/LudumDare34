@@ -6,8 +6,9 @@
 
 #include "ComponentFilter.hpp"
 #include "Packet.hpp"
-#include "Utility.hpp"
 #include "Entity.hpp"
+
+#include "../Helper/TypeToString.hpp"
 
 namespace ses
 {
@@ -20,7 +21,7 @@ class System
         System();
         virtual ~System();
 
-        typedef std::unique_ptr<System> Ptr;
+        typedef std::shared_ptr<System> Ptr;
 
         virtual void handleMessage(sf::Packet& packet);
 

@@ -4,7 +4,6 @@
 #include "Components/AudioListenerComponent.hpp"
 #include "Components/AudioSourceComponent.hpp"
 #include "Components/CameraComponent.hpp"
-#include "Components/CollisionComponent.hpp"
 #include "Components/PhysicComponent.hpp"
 #include "Components/SpriteComponent.hpp"
 #include "Components/TileLayerComponent.hpp"

@@ -8,10 +8,11 @@
 
 #include <SFML/Graphics/Transformable.hpp>
 
-#include "Utility.hpp"
 #include "Component.hpp"
 #include "ComponentFilter.hpp"
 #include "Id.hpp"
+
+#include "../Helper/TypeToString.hpp"
 
 namespace ses
 {
@@ -57,28 +58,28 @@ class Entity : public sf::Transformable
 template<typename T, typename ... Args>
 T& Entity::addComponent(Args&& ... args)
 {
-    mComponents[type<T>()] = std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-    mComponents[type<T>()].mEntity = this;
+    mComponents[lp::type<T>()] = std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    mComponents[lp::type<T>()]->mEntity = this;
     return getComponent<T>();
 }
 
 template<typename T>
 bool Entity::hasComponent()
 {
-    return hasComponent(type<T>());
+    return hasComponent(lp::type<T>());
 }
 
 template<typename T>
 T& Entity::getComponent()
 {
     assert(hasComponent<T>());
-    return static_cast<T&>(*mComponents.at(type<T>()));
+    return static_cast<T&>(*mComponents.at(lp::type<T>()));
 }
 
 template<typename T>
 void Entity::removeComponent()
 {
-    auto itr = mComponents.find(type<T>());
+    auto itr = mComponents.find(lp::type<T>());
     if (itr != mComponents.end())
     {
         itr->mEntity = nullptr;

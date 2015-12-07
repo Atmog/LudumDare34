@@ -9,28 +9,7 @@ World::World()
 
 World::~World()
 {
-    removeSystems();
-}
-
-Entity::Ptr World::instantiate(Id const& id)
-{
-    if (!isInstantiated(id))
-    {
-        mEntities.push_back(std::make_shared<Entity>(id));
-    }
-    return mEntities.back();
-}
-
-void World::destroy(Id const& id)
-{
-    if (isInstantiated(id))
-    {
-        auto e = getEntity(id);
-        if (e != nullptr)
-        {
-            e->remove();
-        }
-    }
+    reset();
 }
 
 bool World::hasSystem(std::string const& systemId)
@@ -51,9 +30,12 @@ void World::update()
         {
             mEntities.erase(mEntities.begin() + i);
         }
-        if (mEntities[i]->needRemove())
+        else
         {
-            mEntities.erase(mEntities.begin() + i);
+            if (mEntities[i]->needRemove())
+            {
+                mEntities.erase(mEntities.begin() + i);
+            }
         }
     }
 }
@@ -117,6 +99,17 @@ EntityVector World::getEntities(ComponentFilter const& filter) const
 std::size_t World::getEntitiesCount() const
 {
     return mEntities.size();
+}
+
+void World::removeEntities()
+{
+    mEntities.clear();
+}
+
+void World::reset()
+{
+    removeSystems();
+    removeEntities();
 }
 
 } // namespace ses

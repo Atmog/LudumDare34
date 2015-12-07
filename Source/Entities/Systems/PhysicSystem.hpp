@@ -3,13 +3,15 @@
 
 #include <SFML/System/Time.hpp>
 
+#include <Box2D/Box2D.h>
+
 #include "../System.hpp"
 #include "../Components.hpp"
 
 namespace ses
 {
 
-namespace PhysicConverter
+namespace Physic
 {
     constexpr double PIXELS_PER_METERS = 32.0;
     constexpr double PI = 3.14159265358979323846;
@@ -45,10 +47,17 @@ class PhysicSystem : public System
         PhysicSystem();
         virtual ~PhysicSystem();
 
+        void setGravity(sf::Vector2f const& gravity);
+        sf::Vector2f getGravity() const;
+
+        b2World& getWorld();
+
         void update(sf::Time dt);
 
     protected:
         ComponentFilter mFilter;
+
+        b2World* mPhysicWorld;
 };
 
 } // namespace ses

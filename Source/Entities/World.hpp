@@ -23,9 +23,11 @@ class World
         template <typename ... Args>
         Entity::Ptr getEntity(Args&& ... args);
         template <typename ... Args>
-        bool isInstantiated(Args ... args);
-        Entity::Ptr instantiate(Id const& id);
-        void destroy(Id const& id);
+        bool isInstantiated(Args&& ... args);
+        template <typename ... Args>
+        Entity::Ptr instantiate(Args&& ... args);
+        template <typename ... Args>
+        void destroy(Args&& ... args);
 
         template <typename T, typename ... Args>
         T& addSystem(Args ... args);
@@ -52,6 +54,9 @@ class World
         EntityVector getEntities() const;
         EntityVector getEntities(ComponentFilter const& filter) const;
         std::size_t getEntitiesCount() const;
+        void removeEntities();
+
+        void reset();
 
     protected:
         EntityVector mEntities;
@@ -83,7 +88,7 @@ Entity::Ptr World::getEntity(Args&& ... args)
 }
 
 template <typename ... Args>
-bool World::isInstantiated(Args ... args)
+bool World::isInstantiated(Args&& ... args)
 {
     const Id id(std::forward<Args>(args)...);
     auto fct = [&](Entity::Ptr e) -> bool
@@ -97,31 +102,56 @@ bool World::isInstantiated(Args ... args)
     return (std::find_if(mEntities.begin(), mEntities.end(), fct) != mEntities.end());
 }
 
+template <typename ... Args>
+Entity::Ptr World::instantiate(Args&& ... args)
+{
+    const Id id(std::forward<Args>(args)...);
+    if (!isInstantiated(id))
+    {
+        mEntities.push_back(std::make_shared<Entity>(id));
+    }
+    return getEntity(id);
+}
+
+template <typename ... Args>
+void World::destroy(Args&& ... args)
+{
+    const Id id(std::forward<Args>(args)...);
+    if (isInstantiated(id))
+    {
+        auto e = getEntity(id);
+        if (e != nullptr)
+        {
+            e->remove();
+        }
+    }
+}
+
 template <typename T, typename ... Args>
 T& World::addSystem(Args ... args)
 {
-    mSystems[type<T>()] = std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-    mSystems[type<T>()]->mWorld = this;
+    mSystems[lp::type<T>()] = std::make_shared<T>(std::forward<Args>(args)...);
+    mSystems[lp::type<T>()]->mWorld = this;
     return getSystem<T>();
 }
 
 template <typename T>
 bool World::hasSystem()
 {
-   return mSystems.find(type<T>()) != mSystems.end();
+   return mSystems.find(lp::type<T>()) != mSystems.end();
 }
 
 template<typename T>
 T& World::getSystem()
 {
     assert(hasSystem<T>());
-    return static_cast<T&>(*mSystems.at(type<T>()));
+    return static_cast<T&>(*mSystems.at(lp::type<T>()));
 }
 
 template<typename T>
 void World::removeSystem()
 {
-    auto itr = mSystems.find(type<T>());
+    auto itr = mSystems.find(lp::type<T>());
     if (itr != mSystems.end())
     {
         itr->second = nullptr;

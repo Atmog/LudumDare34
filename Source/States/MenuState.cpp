@@ -13,7 +13,8 @@ MenuState::MenuState(ah::StateManager& manager)
 	buttonGame->SetAllocation(sf::FloatRect(wSize.x / 2 - bSize.x * 0.5f, 200.f * scale.y, bSize.x, bSize.y));
 	buttonGame->GetSignal(sfg::Widget::OnLeftClick).Connect([&]()
     {
-        ah::Application::getAudio().playSound("jingle");
+        requestClear();
+        requestPush(lp::type<GameState>());
     });
 
 	auto buttonSettings = sfg::Button::Create("Settings");

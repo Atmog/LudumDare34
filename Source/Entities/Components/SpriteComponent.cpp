@@ -32,7 +32,7 @@ sf::FloatRect SpriteComponent::getBounds() const
     sf::Vector2f p(b.left,b.top);
     if (mEntity != nullptr)
     {
-        p = mEntity->getPosition();
+        p = mEntity->getPosition() - mEntity->getOrigin();
     }
     b.left = p.x;
     b.top = p.y;

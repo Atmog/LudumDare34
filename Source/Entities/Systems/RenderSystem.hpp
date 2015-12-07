@@ -35,9 +35,10 @@ void RenderSystem::handleDrawable(sf::RenderTarget& target, sf::RenderStates sta
 {
     if (e->hasComponent<T>())
     {
-        if (e->getComponent<T>().getBounds().intersects(viewRect))
+        auto t = e->getComponent<T>();
+        if (t.getBounds().intersects(viewRect))
         {
-            target.draw(e->getComponent<T>(),states);
+            target.draw(t,states);
         }
     }
 }

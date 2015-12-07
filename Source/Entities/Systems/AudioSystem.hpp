@@ -26,7 +26,10 @@ class AudioSystem : public System
 
         void update();
 
+        void handleMessage(sf::Packet& packet);
+
         typedef std::pair<std::size_t,Id> Source;
+
 
     protected:
         std::vector<Source> mSources;

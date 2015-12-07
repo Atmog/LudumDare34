@@ -8,40 +8,45 @@ Application Application::mInstance;
 void Application::run()
 {
     sf::Clock clock;
+    sf::Time timeSinceLastUpdate;
+    sf::Time timePerFrame = sf::seconds(1/60.f);
     sf::Clock fpsClock;
     std::size_t fps = 0;
     mInstance.mWindow.setDebugInfo("FPS","0");
     while (mInstance.mWindow.isOpen())
     {
-        sf::Event event;
-        while (mInstance.mWindow.pollEvent(event))
-        {
-            mInstance.mStates.handleEvent(event);
+        timeSinceLastUpdate += clock.restart();
 
-            if (event.type == sf::Event::Closed)
+        while (timeSinceLastUpdate > timePerFrame)
+        {
+            timeSinceLastUpdate -= timePerFrame;
+
+            sf::Event event;
+            while (mInstance.mWindow.pollEvent(event))
+            {
+                mInstance.mStates.handleEvent(event);
+
+                if (event.type == sf::Event::Closed)
+                {
+                    mInstance.mWindow.close();
+                }
+                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F3)
+                {
+                    mInstance.mWindow.showDebugInfo(!mInstance.mWindow.isDebugInfoVisible());
+                }
+                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F2)
+                {
+                    mInstance.mWindow.screenshot();
+                }
+            }
+
+            mInstance.mStates.update(timePerFrame);
+            if (mInstance.mStates.empty())
             {
                 mInstance.mWindow.close();
             }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-            {
-                mInstance.mWindow.close();
-            }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F3)
-            {
-                mInstance.mWindow.showDebugInfo(!mInstance.mWindow.isDebugInfoVisible());
-            }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F2)
-            {
-                mInstance.mWindow.screenshot();
-            }
+            mInstance.mAudio.update();
         }
-
-        mInstance.mStates.update(clock.restart());
-        if (mInstance.mStates.empty())
-        {
-            mInstance.mWindow.close();
-        }
-        mInstance.mAudio.update();
 
         mInstance.mWindow.clear();
         mInstance.mStates.render(mInstance.mWindow,sf::RenderStates());

@@ -2,6 +2,7 @@
 #define SES_PHYSICCOMPONENT_HPP
 
 #include "../Component.hpp"
+#include "../Systems/PhysicSystem.hpp"
 
 namespace ses
 {
@@ -9,15 +10,20 @@ namespace ses
 class PhysicComponent : public Component
 {
     public:
-        PhysicComponent();
-        PhysicComponent(float mass);
+        PhysicComponent(b2World& world, b2BodyDef const& bDef, b2FixtureDef const& fDef);
         virtual ~PhysicComponent();
 
-        void setMass(float mass);
-        float getMass() const;
+        void setPosition(sf::Vector2f const& position);
+        sf::Vector2f getPosition() const;
+
+        void setRotation(float rotation);
+        float getRotation() const;
+
+        b2Body* getBody();
 
     protected:
-        float mMass;
+        b2World& mWorld;
+        b2Body* mBody;
 };
 
 } // namespace ses

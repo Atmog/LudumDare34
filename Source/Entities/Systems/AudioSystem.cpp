@@ -53,6 +53,34 @@ void AudioSystem::update()
             ah::Application::getAudio().getAudioSource(mSources[i].first)->setPosition(e->getPosition());
         }
     }
+
+    ses::ComponentFilter listeners;
+    listeners.requires(lp::type<AudioListenerComponent>());
+    ses::EntityVector ls = mWorld->getEntities(listeners);
+    for (std::size_t i = 0; i < ls.size(); i++)
+    {
+        ls[i]->getComponent<AudioListenerComponent>().update();
+    }
+}
+
+void AudioSystem::handleMessage(sf::Packet& packet)
+{
+    std::string type;
+    packet >> type;
+
+    if (type == "Sound")
+    {
+        std::string s;
+        packet >> s;
+        playSound(s);
+    }
+    if (type == "ESound")
+    {
+        std::string s,id;
+        bool dynamic;
+        packet >> s >> id >> dynamic;
+        playSound(s,id,dynamic);
+    }
 }
 
 } // namespace ses
