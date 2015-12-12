@@ -12,6 +12,11 @@ TileLayer::TileLayer()
     }
 }
 
+sf::Vector2f TileLayer::getSizePx() const
+{
+    return sf::Vector2f(5 * 128.f,5 * 128.f);
+}
+
 void TileLayer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();

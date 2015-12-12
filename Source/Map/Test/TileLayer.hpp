@@ -9,6 +9,7 @@ class TileLayer : public map::TileLayer<Tile>
     public:
         TileLayer();
 
+        sf::Vector2f getSizePx() const;
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 

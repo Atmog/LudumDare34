@@ -18,6 +18,11 @@ std::string Layer::getName() const
     return mName;
 }
 
+sf::Vector2f Layer::getSizePx() const
+{
+    return sf::Vector2f(0.f,0.f);
+}
+
 void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();

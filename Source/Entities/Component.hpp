@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "../Helper/pugixml.hpp"
+
 namespace ses
 {
 
@@ -15,6 +17,9 @@ class Component
         virtual ~Component();
 
         typedef std::unique_ptr<Component> Ptr;
+
+        virtual void load(pugi::xml_node& component);
+        virtual void save(pugi::xml_node& component);
 
         friend Entity;
 

@@ -22,6 +22,9 @@ class CameraComponent : public Component
 
         sf::FloatRect getViewRect() const;
 
+        void load(pugi::xml_node& node);
+        void save(pugi::xml_node& node);
+
     protected:
         sf::View mView;
 };

@@ -1,6 +1,6 @@
 #include "PhysicSystem.hpp"
 #include "../World.hpp"
-#include <iostream>
+#include "../Components.hpp"
 
 namespace ses
 {

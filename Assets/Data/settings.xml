@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Audio>
-	<Global value="100" />
+	<Global value="49" />
 	<Music value="100" />
 	<Sound value="100" />
 </Audio>
@@ -9,3 +9,7 @@
 	<Fullscreen value="false" />
 	<Resolution value="800,600" />
 </Window>
+<GameSettings>
+	<Action id="left" key="Q" hold="true" />
+	<Action id="right" key="D" hold="true" />
+</GameSettings>

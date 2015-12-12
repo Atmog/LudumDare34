@@ -13,9 +13,12 @@
 #include "Id.hpp"
 
 #include "../Helper/TypeToString.hpp"
+#include "../Helper/pugixml.hpp"
 
 namespace ses
 {
+
+class World;
 
 class Entity : public sf::Transformable
 {
@@ -48,7 +51,14 @@ class Entity : public sf::Transformable
         void remove();
         bool needRemove() const;
 
+        void load(pugi::xml_node& node);
+        void save(pugi::xml_node& node);
+
+        void setWorld(World* world);
+        World* getWorld();
+
     protected:
+        World* mWorld;
         const Id mId;
         std::map<std::string,Component::Ptr> mComponents;
         float mZ;

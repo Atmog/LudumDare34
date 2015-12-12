@@ -6,7 +6,6 @@
 #include <Box2D/Box2D.h>
 
 #include "../System.hpp"
-#include "../Components.hpp"
 
 namespace ses
 {

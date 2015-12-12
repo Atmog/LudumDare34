@@ -3,6 +3,8 @@
 SettingsState::SettingsState(ah::StateManager& manager)
 : ah::State(manager,lp::type<SettingsState>())
 {
+    mKeySelected = 0;
+
     sf::Vector2u wSize = ah::Application::getWindow().getSize();
     sf::Vector2f scale = sf::Vector2f(wSize.x/800.f,wSize.y/600.f);
 
@@ -127,16 +129,47 @@ SettingsState::SettingsState(ah::StateManager& manager)
     box->Pack(frameG);
     // End Graphics
 
+    // Begin Key Binding
+    mKeyLeft = sfg::Button::Create(thor::toString(Game::getActionKey("left")));
+    mKeyLeft->GetSignal(sfg::Widget::OnLeftClick).Connect([&]()
+    {
+        mKeySelected = 1;
+    });
+    auto h7 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 5.f);
+    h7->Pack(sfg::Label::Create("Left"));
+    h7->Pack(mKeyLeft);
+
+    mKeyRight = sfg::Button::Create(thor::toString(Game::getActionKey("right")));
+    mKeyRight->GetSignal(sfg::Widget::OnLeftClick).Connect([&]()
+    {
+        mKeySelected = 2;
+    });
+    auto h8 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 5.f);
+    h8->Pack(sfg::Label::Create("Right"));
+    h8->Pack(mKeyRight);
+
+    auto c = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
+    c->Pack(h7);
+    c->Pack(h8);
+
+    auto frameB = sfg::Frame::Create("Key Binding");
+    frameB->Add(c);
+    frameB->SetAlignment(sf::Vector2f(0.1f,0.f));
+
+    box->Pack(frameB);
+
+    // End Key Binding
+
+
     // Begin Game Settings
 
     // WRITE GAME SETTINGS GUI HERE
-
-    auto c = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
-    //c->Pack(...);
-    //c->Pack(...);
+    auto d = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
+    //d->Pack(...);
+    //d->Pack(...);
 
     auto frameS = sfg::Frame::Create("Game Settings");
-    frameS->Add(c);
+    frameS->Add(d);
     frameS->SetAlignment(sf::Vector2f(0.1f,0.f));
 
     box->Pack(frameS);
@@ -170,6 +203,33 @@ SettingsState::~SettingsState()
 
 bool SettingsState::handleEvent(sf::Event const& event)
 {
+    if (event.type == sf::Event::MouseButtonPressed)
+    {
+        mKeySelected = 0;
+    }
+    if (event.type == sf::Event::KeyPressed && mKeySelected != 0)
+    {
+        switch (mKeySelected)
+        {
+            case 1:
+            {
+                Game::setActionKey("left",event.key.code);
+                mKeyLeft->SetLabel(thor::toString(event.key.code));
+
+            } break;
+
+            case 2:
+            {
+                Game::setActionKey("right",event.key.code);
+                mKeyRight->SetLabel(thor::toString(event.key.code));
+
+
+            } break;
+
+            default: break;
+        }
+    }
+
     mDesktop.HandleEvent(event);
     return true;
 }

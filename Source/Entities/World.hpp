@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <functional>
 
+#include "../Helper/pugixml.hpp"
+
 #include "Entity.hpp"
 #include "System.hpp"
 
@@ -15,7 +17,7 @@ namespace ses
 class World
 {
     public:
-        World();
+        World(std::string const& saveAs = "");
         virtual ~World();
 
         typedef std::function<Entity::Ptr()> Prefab;
@@ -58,10 +60,14 @@ class World
 
         void reset();
 
+        bool load(std::string const& filename);
+        void save();
+
     protected:
         EntityVector mEntities;
         std::map<std::string,System::Ptr> mSystems;
         std::map<std::string,Prefab> mPrefabs;
+        std::string mFilename;
 };
 
 template <typename ... Args>
@@ -109,6 +115,7 @@ Entity::Ptr World::instantiate(Args&& ... args)
     if (!isInstantiated(id))
     {
         mEntities.push_back(std::make_shared<Entity>(id));
+        mEntities.back()->setWorld(this);
     }
     return getEntity(id);
 }

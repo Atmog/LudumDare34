@@ -6,6 +6,6 @@
 #include "Components/CameraComponent.hpp"
 #include "Components/PhysicComponent.hpp"
 #include "Components/SpriteComponent.hpp"
-#include "Components/TileLayerComponent.hpp"
+#include "Components/LayerComponent.hpp"
 
 #endif // SES_COMPONENTS_HPP_INCLUDED

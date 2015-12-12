@@ -19,6 +19,8 @@ class Layer : public sf::Drawable, public sf::Transformable
         void setName(std::string const& name);
         std::string getName() const;
 
+        virtual sf::Vector2f getSizePx() const;
+
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     protected:

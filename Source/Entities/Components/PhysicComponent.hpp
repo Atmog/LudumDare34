@@ -10,8 +10,10 @@ namespace ses
 class PhysicComponent : public Component
 {
     public:
-        PhysicComponent(b2World& world, b2BodyDef const& bDef, b2FixtureDef const& fDef);
+        PhysicComponent();
         virtual ~PhysicComponent();
+
+        void init(b2World* world, b2BodyDef* bDef, b2FixtureDef* fDef);
 
         void setPosition(sf::Vector2f const& position);
         sf::Vector2f getPosition() const;
@@ -21,8 +23,11 @@ class PhysicComponent : public Component
 
         b2Body* getBody();
 
+        void load(pugi::xml_node& node);
+        void save(pugi::xml_node& node);
+
     protected:
-        b2World& mWorld;
+        b2World* mWorld;
         b2Body* mBody;
 };
 

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<Entities>
+	<Entity id="player">
+		<Data pos-x="710.189331" pos-y="99.9997559" pos-z="0" ori-x="64" ori-y="64" sca-x="1" sca-y="1" rot="359.999969" />
+		<Components>
+			<Component id="ses::AudioListenerComponent" />
+			<Component id="ses::CameraComponent" cen-x="710.189331" cen-y="99.9997559" size-x="800" size-y="600" />
+			<Component id="ses::PhysicComponent">
+				<BodyDef type="2" pos-x="22.1934166" pos-y="3.12499237" angle="-3.2761028e-007" />
+				<BodyShape />
+				<FixtureDef />
+			</Component>
+			<Component id="ses::SpriteComponent" texture="icon" left="0" top="0" width="128" height="128" />
+		</Components>
+	</Entity>
+	<Entity id="wall">
+		<Data pos-x="900" pos-y="100" pos-z="0" ori-x="64" ori-y="64" sca-x="1" sca-y="1" rot="0" />
+		<Components>
+			<Component id="ses::PhysicComponent">
+				<BodyDef type="0" pos-x="28.125" pos-y="3.125" angle="0" />
+				<BodyShape />
+				<FixtureDef />
+			</Component>
+			<Component id="ses::SpriteComponent" texture="icon" left="0" top="0" width="128" height="128" />
+		</Components>
+	</Entity>
+	<Entity id="layer">
+		<Data pos-x="0" pos-y="0" pos-z="-100" ori-x="0" ori-y="0" sca-x="1" sca-y="1" rot="0" />
+		<Components>
+			<Component id="ses::LayerComponent" layer="BgLayer" />
+		</Components>
+	</Entity>
+	<Entity id="tiles">
+		<Data pos-x="0" pos-y="0" pos-z="-50" ori-x="0" ori-y="0" sca-x="1" sca-y="1" rot="0" />
+		<Components>
+			<Component id="ses::LayerComponent" layer="TileLayer" />
+		</Components>
+	</Entity>
+</Entities>

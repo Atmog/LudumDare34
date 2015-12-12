@@ -10,7 +10,7 @@ RenderSystem::RenderSystem()
 
     std::vector<std::string> drawableTypes;
     drawableTypes.push_back(lp::type<SpriteComponent>());
-    drawableTypes.push_back(lp::type<TileLayerComponent>());
+    drawableTypes.push_back(lp::type<LayerComponent>());
     mFilterDrawables.requiresOne(drawableTypes);
 }
 
@@ -37,7 +37,7 @@ void RenderSystem::render(sf::RenderTarget& target)
         sf::RenderStates states;
         states.transform *= e[i]->getTransform();
         handleDrawable<SpriteComponent>(target,states,e[i],viewRect);
-        handleDrawable<TileLayerComponent>(target,states,e[i],viewRect);
+        handleDrawable<LayerComponent>(target,states,e[i],viewRect);
     }
 
     target.setView(old);

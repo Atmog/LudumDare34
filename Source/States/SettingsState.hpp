@@ -40,6 +40,10 @@ class SettingsState : public ah::State
         sfg::CheckButton::Ptr mVerticalSync;
         sfg::CheckButton::Ptr mFullscreen;
 
+        int mKeySelected;
+        sfg::Button::Ptr mKeyRight;
+        sfg::Button::Ptr mKeyLeft;
+
         sf::Sprite mBackground;
 };
 

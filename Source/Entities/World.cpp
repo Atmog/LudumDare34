@@ -3,12 +3,17 @@
 namespace ses
 {
 
-World::World()
+World::World(std::string const& saveAs)
 {
+    mFilename = saveAs;
 }
 
 World::~World()
 {
+    if (mFilename != "")
+    {
+        save();
+    }
     reset();
 }
 
@@ -110,6 +115,45 @@ void World::reset()
 {
     removeSystems();
     removeEntities();
+}
+
+bool World::load(std::string const& filename)
+{
+    pugi::xml_document doc;
+    if (!doc.load_file(filename.c_str()))
+    {
+        return false;
+    }
+    pugi::xml_node node = doc.child("Entities");
+    if (node)
+    {
+        for (pugi::xml_node entity = node.child("Entity"); entity; entity = entity.next_sibling("Entity"))
+        {
+            std::string id = entity.attribute("id").value();
+            Entity::Ptr e = instantiate(id);
+            e->load(entity);
+        }
+        mFilename = filename;
+        return true;
+    }
+    return false;
+}
+
+void World::save()
+{
+    pugi::xml_document doc;
+    doc.load_file(mFilename.c_str());
+    if (doc.child("Entities"))
+    {
+        doc.remove_child("Entities");
+    }
+    pugi::xml_node node = doc.append_child("Entities");
+    for (std::size_t i = 0; i < mEntities.size(); i++)
+    {
+        mEntities[i]->save(node);
+    }
+    doc.save_file(mFilename.c_str());
+
 }
 
 } // namespace ses
